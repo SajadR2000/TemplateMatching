@@ -17,15 +17,15 @@ def normalized_cross_correlation(image, template):
         # Subtracting mean of i-th channel
         template_mean_i = np.mean(template_i)
         template_reduced_mean_i = template_i - template_mean_i
-        img_window_mean_i = cv2.filter2D(img_i, cv2.CV_64F, (1. / (w * h)) * np.ones((h, w)))
+        img_window_mean_i = cv2.filter2D(img_i, -1, (1. / (w * h)) * np.ones((h, w)))
         img_reduced_mean_i = img_i - img_window_mean_i
         # Computing NCC numerator which is CC of image and template
-        normalized_cross_correlation_numerator_i = cv2.filter2D(img_reduced_mean_i, cv2.CV_64F, template_reduced_mean_i)
+        normalized_cross_correlation_numerator_i = cv2.filter2D(img_reduced_mean_i, -1, template_reduced_mean_i)
         # Norm of template when its mean is subtracted
         normalized_cross_correlation_denominator_first_term_i = np.sqrt(np.sum(np.square(template_reduced_mean_i)))
         # Windowed norm of image when its windowed mean is subtracted
         normalized_cross_correlation_denominator_second_term_i = np.sqrt(
-            cv2.filter2D(np.square(img_reduced_mean_i), cv2.CV_64F, np.ones((h, w))))
+            cv2.filter2D(np.square(img_reduced_mean_i), -1, np.ones((h, w))))
         # Computing NCC denominator which is multiplication of above norms
         normalized_cross_correlation_denominator_i = normalized_cross_correlation_denominator_first_term_i * \
             normalized_cross_correlation_denominator_second_term_i
